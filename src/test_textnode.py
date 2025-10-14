@@ -25,7 +25,7 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(first_node, second_node)
 
     def test_plaintext(self):
-        node = TextNode("This is a text node", TextType.PLAINTEXT)
+        node = TextNode("This is a text node", TextType.TEXT)
         html_node = node.to_html_node()
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
@@ -45,7 +45,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.value, expected.value)
 
     def test_codetext(self):
-        text_node = TextNode("print('hello')", TextType.CODETEXT)
+        text_node = TextNode("print('hello')", TextType.CODE)
         html_node = text_node.to_html_node()
         expected = LeafNode("code", "print('hello')")
         self.assertEqual(html_node.tag, expected.tag)
