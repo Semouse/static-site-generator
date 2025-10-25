@@ -89,4 +89,13 @@ def extract_markdown_links(text):
     matches = re.findall(link_regex, text)
     return matches
 
+def markdown_to_blocks(markdown):
+    result = []
+    blocks = markdown.split("\n\n")
+    for block in blocks:
+        trimmed_block = block.strip()
+        if len(trimmed_block) > 0:
+            result.append(trimmed_block)
 
+    return result
+    
