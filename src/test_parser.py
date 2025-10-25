@@ -101,3 +101,90 @@ This is the same paragraph on a new line
             ],
             blocks,
         )
+
+    def test_heading_block_to_block_type(self):
+        test_cases = [
+            "# Heading 1",
+            "## Heading 2",
+            "### Heading 3",
+            "#### Heading 4",
+            "##### Heading 5",
+            "###### Heading 6",
+            "# Single word"
+        ]
+        for block in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), BlockType.HEADING)
+
+    def test_code_block_to_block_type(self):
+        test_cases = [
+            "```python\nprint('hello')\n```",
+            "```\ncode block\n```",
+            "```javascript\nconsole.log('test')\n```"
+        ]
+        for block in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), BlockType.CODE)
+    
+    def test_quote_block_to_block_type(self):
+        test_cases = [
+            "> This is a quote",
+            "> Multiple line quote\n> Second line",
+            "> Single character"
+        ]
+        for block in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), BlockType.QUOTE)
+    
+    def test_unordered_list_block_to_block_type(self):
+        test_cases = [
+            "- Item 1",
+            "- Another item",
+            "- "
+        ]
+        for block in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), BlockType.UNORDERED_LIST)
+    
+    def test_ordered_list_block_to_block_type(self):
+        test_cases = [
+            "1. First item",
+            "1. Only item",
+            "1. "
+        ]
+        for block in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), BlockType.ORDERED_LIST)
+    
+    def test_paragraph_block_to_block_type(self):
+        test_cases = [
+            "This is a regular paragraph.",
+            "No special characters at start",
+            "2. This looks like ordered but doesn't start with 1.",
+            "* This is not a dash",
+            ">This has no space after >",
+            "```incomplete code block",
+            "code block```",
+            "  # Heading with leading space",
+            "\t# Heading with tab",
+            "1.First item without space",
+            "-Item without space"
+        ]
+        for block in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
+    
+    def test_edge_cases_markdown_to_block_type(self):
+        test_cases = [
+            ("", BlockType.PARAGRAPH),
+            ("#", BlockType.HEADING),
+            ("> ", BlockType.QUOTE),
+            ("- ", BlockType.UNORDERED_LIST),
+            ("1. ", BlockType.ORDERED_LIST),
+            ("```", BlockType.PARAGRAPH),
+            (" ``` ", BlockType.PARAGRAPH),
+        ]
+        
+        for block, expected in test_cases:
+            with self.subTest(block=block):
+                self.assertEqual(block_to_block_type(block), expected)

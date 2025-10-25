@@ -1,8 +1,32 @@
 import re
+
+from enum import Enum
 from textnode import TextNode, TextType
+
+class BlockType(Enum):
+    PARAGRAPH = 1
+    HEADING = 2
+    CODE = 3
+    QUOTE = 4
+    UNORDERED_LIST = 5
+    ORDERED_LIST = 6
 
 image_regex = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
 link_regex = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+
+def block_to_block_type(block):
+    if block.startswith("#"):
+        return BlockType.HEADING
+    elif block.startswith("```") and block.endswith("```") and len(block) >= 6:
+        return BlockType.CODE
+    elif block.startswith("> "):
+        return BlockType.QUOTE
+    elif block.startswith("- "):
+        return BlockType.UNORDERED_LIST
+    elif block.startswith("1. "):
+        return BlockType.ORDERED_LIST
+    else:
+        return BlockType.PARAGRAPH
 
 def text_to_textnodes(text):
     node = TextNode(text, TextType.TEXT)
